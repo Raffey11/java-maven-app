@@ -1,40 +1,31 @@
+#!/usr/bin/env groovy
+
 def gv
 
 pipeline {
     agent any
     tools {
-        maven 'maven'
-    }
-    parameters {
-        choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: '')
-        booleanParam(name: 'executeTests', defaultValue: true, description: '')
-
+        maven 'Maven'
     }
     stages {
         stage("init") {
             steps {
                 script {
-                    gv = load 'script.groovy'
+                    gv = load "script.groovy"
                 }
             }
         }
-
-        stage("build") {
+        stage("build jar") {
+            steps {
+                script {
+                    gv.buildJar()
+                }
+            }
+        }
+        stage("build image") {
             steps {
                 script {
                     gv.buildImage()
-                }
-            }
-        }
-        stage("test") {
-            when {
-                expression {
-                    params.executeTests == true
-                }
-            }
-            steps {
-                script {
-                    gv.testApp()
                 }
             }
         }
