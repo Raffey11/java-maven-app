@@ -13,7 +13,10 @@ def buildImage() {
 } 
 
 def deployApp() {
-    echo 'deploying the application...'
+    def dockerCmd = 'docker run -d -p3000:8080 raffey/java-maven-app:1.1'
+    sshagent(['ec2-server-key']) {
+        sh "ssh -o StrictHostKeyChecking=no ec2-user@3.250.6.221 ${dockerCmd}"
+    }
 } 
 
 return this
